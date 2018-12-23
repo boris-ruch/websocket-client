@@ -9,7 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class Task {
+    
     private Long id;
+    private String gatewayId;
     private String name;
 
 }

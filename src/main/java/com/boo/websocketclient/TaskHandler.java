@@ -19,6 +19,10 @@ public class TaskHandler extends StompSessionHandlerAdapter {
     @Value("${topic_confirmation}")
     private String topicConfirmation;
 
+
+    @Value("${gatewayId}")
+    private String gatewayId;
+
     @Autowired
     private StompSessionHolder stompSessionHolder;
 
@@ -40,8 +44,13 @@ public class TaskHandler extends StompSessionHandlerAdapter {
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        log.info("Received and Confirm Task: {}", payload);
-        stompSessionHolder.getSession().send(topicConfirmation, payload);
+        Task task = (Task) payload;
+        if (gatewayId.equals(task.getGatewayId())) {
+            log.info("Received and Confirm Task: {}", task);
+            stompSessionHolder.getSession().send(topicConfirmation, task);
+        } else {
+            log.info("task is not for this gateway");
+        }
 
     }
 }
